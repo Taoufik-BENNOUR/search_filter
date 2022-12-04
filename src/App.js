@@ -1,17 +1,23 @@
 import { useState } from "react";
 import "./app.css";
 import { users } from "./dummyData";
+import Table from "./Table";
+
 function App() {
-  const [filter, setfilter] = useState("")
+  const [filter, setfilter] = useState("");
+
+const keys =["name","username","email"]
+      //user["name"]=value
+  const handleFilter = (data)=>{ 
+    return data.filter(user=>keys.some(key=>user[key].toLowerCase().includes(filter.toLocaleLowerCase())))
+  }
 
   return (
-    <div>
+    <div className="app">
+      <div className="container">
       <input type={"text"} placeholder="search" className="search" onChange={(e)=>setfilter(e.target.value)} />
-      <ul className="ul">
-        {users.filter(user=>user.username.toLowerCase().includes(filter.toLowerCase())).map((user)=>
-          <li className="li" key={user.id}>{user.username}</li>
-        )}
-      </ul>
+      <Table users={handleFilter(users)} />
+      </div>
     </div>
   );
 }
