@@ -1,22 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./app.css";
-import { users } from "./dummyData";
 import Table from "./Table";
-
+import axios from "axios"
 function App() {
   const [filter, setfilter] = useState("");
-
-const keys =["name","username","email"]
-      //user["name"]=value
-  const handleFilter = (data)=>{ 
-    return data.filter(user=>keys.some(key=>user[key].toLowerCase().includes(filter.toLocaleLowerCase())))
-  }
-
+  const [data, setdata] = useState([])
+  useEffect(() => {
+    const fetchData = async()=>{
+      const response = await axios.get(`http://localhost:5000/?query=${filter}`)
+      setdata(response.data)
+    }
+    fetchData()
+  }, [filter])
   return (
     <div className="app">
       <div className="container">
       <input type={"text"} placeholder="search" className="search" onChange={(e)=>setfilter(e.target.value)} />
-      <Table users={handleFilter(users)} />
+      <Table users={data} />
       </div>
     </div>
   );
